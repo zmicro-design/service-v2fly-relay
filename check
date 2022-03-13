@@ -1,0 +1,22 @@
+#!/bin/bash
+
+load inquirer
+
+check() {
+  if [ ! -f $SERVICE_CONFIG ]; then
+     touch $SERVICE_CONFIG
+  fi
+
+  # check
+  config::load_file $SERVICE_CONFIG
+  if [ -z "$SERVICE_V2FLY_RELAY_UPSTREAM" ]; then
+    inquirer::text "请输入 V2Fly 地址（例如：https://example.com）:" value
+    config::set SERVICE_V2FLY_RELAY_UPSTREAM $value $SERVICE_CONFIG
+  fi
+
+  # apply
+  config::load_file $SERVICE_CONFIG
+  export SERVICE_V2FLY_RELAY_UPSTREAM=$SERVICE_V2FLY_RELAY_UPSTREAM
+}
+
+check $@
